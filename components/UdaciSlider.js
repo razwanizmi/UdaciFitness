@@ -1,10 +1,18 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Slider } from "react-native";
 
-const UdaciSlider = props => {
+const UdaciSlider = ({ max, unit, step, value, onChange }) => {
   return (
     <View>
-      <Text>UdaciSlider</Text>
+      <Slider
+        step={step}
+        value={value}
+        maximumValue={max}
+        minimumValue={0}
+        onValueChange={onChange}
+      />
+      <Text>{value}</Text>
+      <Text>{unit}</Text>
     </View>
   );
 };

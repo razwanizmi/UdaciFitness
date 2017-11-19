@@ -55,7 +55,7 @@ export const getMetricMetaInfo = metric => {
       displayName: "Sleep",
       max: 24,
       unit: "hours",
-      step: 100,
+      step: 1,
       type: "slider",
       getIcon() {
         return (

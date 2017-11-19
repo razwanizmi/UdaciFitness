@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { DateHeader, UdaciSlider, UdaciSteppers } from "./";
+import { Ionicons } from "@expo/vector-icons";
+import { DateHeader, TextButton, UdaciSlider, UdaciSteppers } from "./";
 import { getMetricMetaInfo, timeToString } from "../utils/helpers";
 
 const SubmitBtn = ({ onPress }) => {
@@ -24,10 +25,10 @@ class AddEntry extends Component {
     const { max, step } = getMetricMetaInfo(metric);
 
     this.setState(prevState => {
-      const count = state[metric] + step;
+      const count = prevState[metric] + step;
 
       return {
-        ...state,
+        ...prevState,
         [metric]: count > max ? max : count
       };
     });
@@ -37,16 +38,16 @@ class AddEntry extends Component {
     const { step } = getMetricMetaInfo(metric);
 
     this.setState(prevState => {
-      const count = state[metric] - step;
+      const count = prevState[metric] - step;
 
       return {
-        ...state,
+        ...prevState,
         [metric]: count < 0 ? 0 : count
       };
     });
   };
 
-  slide = (metric, neValue) => {
+  slide = (metric, value) => {
     this.setState(() => ({
       [metric]: value
     }));
@@ -73,15 +74,37 @@ class AddEntry extends Component {
     // Clear local notification
   };
 
+  reset = () => {
+    const key = timeToString()
+
+    // Update Redux
+
+    // Route to home
+
+    // Update DB
+  }
+
   render() {
     const metaInfo = getMetricMetaInfo();
+
+    if (this.props.alreadyLogged) {
+      return (
+        <View>
+          <Ionicons name="ios-happy-outline" size={100} />
+          <Text>You already logged your information for today</Text>
+          <TextButton onPress={this.reset}>
+            Reset
+          </TextButton>
+        </View>
+      );
+    }
 
     return (
       <View>
         <DateHeader date={new Date().toLocaleDateString()} />
         {Object.keys(metaInfo).map(key => {
           const { getIcon, type, ...rest } = metaInfo[key];
-          const { value } = this.state[key];
+          const value = this.state[key];
 
           return (
             <View key={key}>
