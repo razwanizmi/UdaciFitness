@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { DateHeader, TextButton, UdaciSlider, UdaciSteppers } from "./";
 import { getMetricMetaInfo, timeToString } from "../utils/helpers";
+import { submitEntry, removeEntry } from "../utils/api";
 
 const SubmitBtn = ({ onPress }) => {
   return (
@@ -69,7 +70,7 @@ class AddEntry extends Component {
 
     // Navigate to home
 
-    // Save to DB
+    submitEntry(key, entry);
 
     // Clear local notification
   };
@@ -81,7 +82,7 @@ class AddEntry extends Component {
 
     // Route to home
 
-    // Update DB
+    removeEntry(key);
   }
 
   render() {
