@@ -119,3 +119,9 @@ export const timeToString = (time = Date.now()) => {
   );
   return todayUTC.toISOString().split("T")[0];
 };
+
+export const getDailyReminderValue = () => {
+  return {
+    today: "👋 Don't forget to log your data today!"
+  }
+}

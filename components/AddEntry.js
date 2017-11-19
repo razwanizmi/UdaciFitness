@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { DateHeader, TextButton, UdaciSlider, UdaciSteppers } from "./";
-import { getMetricMetaInfo, timeToString } from "../utils/helpers";
+import { addEntry } from "../actions";
+import {
+  getMetricMetaInfo,
+  timeToString,
+  getDailyReminderValue
+} from "../utils/helpers";
 import { submitEntry, removeEntry } from "../utils/api";
 
 const SubmitBtn = ({ onPress }) => {
@@ -58,7 +64,11 @@ class AddEntry extends Component {
     const key = timeToString();
     const entry = this.state;
 
-    // Update Redux
+    this.props.dispatch(
+      addEntry({
+        [key]: entry
+      })
+    );
 
     this.setState(() => ({
       run: 0,
@@ -70,20 +80,24 @@ class AddEntry extends Component {
 
     // Navigate to home
 
-    submitEntry(key, entry);
+    submitEntry({ key, entry });
 
     // Clear local notification
   };
 
   reset = () => {
-    const key = timeToString()
+    const key = timeToString();
 
-    // Update Redux
+    this.props.dispatch(
+      addEntry({
+        [key]: getDailyReminderValue()
+      })
+    );
 
     // Route to home
 
     removeEntry(key);
-  }
+  };
 
   render() {
     const metaInfo = getMetricMetaInfo();
@@ -93,9 +107,7 @@ class AddEntry extends Component {
         <View>
           <Ionicons name="ios-happy-outline" size={100} />
           <Text>You already logged your information for today</Text>
-          <TextButton onPress={this.reset}>
-            Reset
-          </TextButton>
+          <TextButton onPress={this.reset}>Reset</TextButton>
         </View>
       );
     }
@@ -133,4 +145,12 @@ class AddEntry extends Component {
   }
 }
 
-export default AddEntry;
+const mapStateToProps = state => {
+  const key = timeToString();
+
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === "undefined"
+  };
+};
+
+export default connect(mapStateToProps)(AddEntry);

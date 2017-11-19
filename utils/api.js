@@ -11,18 +11,16 @@ export const submitEntry = ({ entry, key }) => {
 };
 
 export const removeEntry = key => {
-  return AsyncStorage.getItem(key).then(results => {
+  return AsyncStorage.getItem(CALENDAR_STORAGE_KEY).then(results => {
     const data = JSON.parse(results);
 
-    Object.keys(data).reduce((accumulator, currentKey) => {
-      if (key !== currentKey) {
+    const newData = Object.keys(data).reduce((accumulator, currentKey) => {
+      if (currentKey !== key) {
         accumulator[currentKey] = data[currentKey];
       }
-
       return accumulator;
     }, {});
-    // data[key] = undefined;
-    // delete data[key];
-    AsyncStorage.setItem(CALENDAR_STORAGE_KEY, JSON.stringify(data));
+
+    AsyncStorage.setItem(CALENDAR_STORAGE_KEY, JSON.stringify(newData));
   });
 };
