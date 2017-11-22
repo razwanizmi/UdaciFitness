@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import { AddEntry } from "./components";
+import { AddEntry, History } from "./components";
 import reducer from "./reducers";
 
 class App extends Component {
@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <Provider store={createStore(reducer)}>
         <View style={{ flex: 1}}>
-          <AddEntry />
+          <History />
         </View>
       </Provider>
     );
