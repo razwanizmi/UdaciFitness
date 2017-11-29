@@ -6,6 +6,7 @@ import {
   Platform,
   StyleSheet
 } from "react-native";
+import { NavigationActions } from "react-navigation";
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { DateHeader, TextButton, UdaciSlider, UdaciSteppers } from "./";
@@ -90,7 +91,7 @@ class AddEntry extends Component {
       eat: 0
     }));
 
-    // Navigate to home
+    this.toHome();
 
     submitEntry({ key, entry });
 
@@ -106,9 +107,17 @@ class AddEntry extends Component {
       })
     );
 
-    // Route to home
+    this.toHome();
 
     removeEntry(key);
+  };
+
+  toHome = () => {
+    this.props.navigation.dispatch(
+      NavigationActions.back({
+        key: "AddEntry"
+      })
+    );
   };
 
   render() {
