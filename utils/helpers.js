@@ -96,6 +96,13 @@ export const getMetricMetaInfo = metric => {
   return !metric ? info : info[metric];
 };
 
+export const isBetween = (num, x, y) => {
+  if (num >= x && num <= y) {
+    return true;
+  }
+  return false;
+};
+
 export const calculateDirection = heading => {
   let direction = "";
 
