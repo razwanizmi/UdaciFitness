@@ -4,7 +4,8 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Animated
 } from "react-native";
 import { Foundation } from "@expo/vector-icons";
 import { purple, white } from "../utils/colors";
@@ -15,7 +16,8 @@ class Live extends Component {
   state = {
     coords: null,
     status: null,
-    direction: ""
+    direction: "",
+    bounceValue: new Animated.Value(1)
   };
 
   componentDidMount() {
@@ -57,7 +59,14 @@ class Live extends Component {
       },
       ({ coords }) => {
         const newDirection = calculateDirection(coords.heading);
-        const { direction } = this.state;
+        const { direction, bounceValue } = this.state;
+
+        if (newDirection !== direction) {
+          Animated.sequence([
+            Animated.timing(bounceValue, { duration: 200, toValue: 1.04 }),
+            Animated.spring(bounceValue, { toValue: 1, friction: 4 })
+          ]).start();
+        }
 
         this.setState(() => ({
           coords,
@@ -69,7 +78,7 @@ class Live extends Component {
   };
 
   render() {
-    const { coords, status, direction } = this.state;
+    const { coords, status, direction, bounceValue } = this.state;
 
     if (status === null) {
       return <ActivityIndicator style={{ marginTop: 30 }} />;
@@ -105,16 +114,24 @@ class Live extends Component {
       <View style={styles.container}>
         <View style={styles.directionContainer}>
           <Text style={styles.header}>You're heading</Text>
-          <Text style={styles.direction}>{direction}</Text>
+          <Animated.Text
+            style={[styles.direction, { transform: [{ scale: bounceValue }] }]}
+          >
+            {direction}
+          </Animated.Text>
         </View>
         <View style={styles.metricContainer}>
           <View style={styles.metric}>
             <Text style={[styles.header, { color: white }]}>Altitude</Text>
-            <Text style={[styles.subHeader, { color: white }]}>{Math.ceil(coords.altitude)} Meters</Text>
+            <Text style={[styles.subHeader, { color: white }]}>
+              {Math.ceil(coords.altitude)} Meters
+            </Text>
           </View>
           <View style={styles.metric}>
             <Text style={[styles.header, { color: white }]}>Speed</Text>
-            <Text style={[styles.subHeader, { color: white }]}>{(coords.speed * 3.6).toFixed(1)} KPH</Text>
+            <Text style={[styles.subHeader, { color: white }]}>
+              {(coords.speed * 3.6).toFixed(1)} KPH
+            </Text>
           </View>
         </View>
       </View>
