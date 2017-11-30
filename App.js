@@ -8,6 +8,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { AddEntry, EntryDetail, History, Live } from "./components";
 import reducer from "./reducers";
 import { purple, white } from "./utils/colors";
+import { setLocalNotification } from "./utils/helpers";
 
 const UdaciStatusBar = ({ backgroundColor, ...props }) => {
   return (
@@ -84,6 +85,10 @@ const MainNavigator = StackNavigator({
 });
 
 class App extends Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+
   render() {
     return (
       <Provider store={createStore(reducer)}>
